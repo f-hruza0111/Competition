@@ -10,14 +10,19 @@ declare module 'express' {
 }
 
 const app = express();
-const port = process.env.PORT ? parseInt(process.env.PORT) : 3000
+const externalUrl = process.env.RENDER_EXTERNA_URL
+const port = externalUrl && process.env.PORT ? parseInt(process.env.PORT) : 3000
+
+const baseURL = externalUrl || `http://localhost:${port}`
+
 const config = {
     authRequired: false,
     auth0Logout: true,
     secret: process.env.SECRET,
-    baseURL: process.env.BASE_URL || `http://localhost:${port}`,
+    baseURL: baseURL,
     clientID: process.env.CLIENTID,
-    issuerBaseURL: process.env.ISSUER_BASE_URL
+    issuerBaseURL: process.env.ISSUER_BASE_URL,
+
 };
   
 
@@ -57,5 +62,5 @@ app.use('/competition', competitionRouter)
 
 
 app.listen(port, () => {
-    console.log(`Listening on port ${port}`);
+    console.log(`Listening on ${baseURL}`);
 })
