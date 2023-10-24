@@ -1,5 +1,5 @@
 import express from 'express'
-import { getAllCompetitions } from './database/repository.js';
+import { getAllCompetitions, createCompetition } from './database/repository.js';
 import competitionRouter from './routes/competition.js' 
 import { auth } from 'express-openid-connect';
 
@@ -47,7 +47,7 @@ app.get("/", async (req, res) => {
         const user = req.oidc.user;
         if(user){
             res.render('index', {
-                    competitions: await getAllCompetitions(user.name), 
+                    competitions: await getAllCompetitions(user.email), 
                     isAuthenticated: req.oidc.isAuthenticated()
                 }
             )
@@ -55,7 +55,50 @@ app.get("/", async (req, res) => {
     }
 })
 
+app.post('/', async (req, res) => {
+    // console.log(req.body)
+    
+    const name = req.body.name
+    const victory_points : number = parseInt(req.body.victoryPoints);
+    const draw_points : number = parseInt(req.body.drawPoints);
+    const loss_points : number = parseInt(req.body.lossPoints);
+    const competitorsUntrimed: string[] = req.body.competitors.split(/[\n;]/)
 
+    // console.log(competitorsUntrimed)
+
+    const competitors : string[] = competitorsUntrimed.map(competitor => {return competitor.trim()})
+
+    const scoring :number[] = []
+
+    scoring.push(victory_points)
+    scoring.push(draw_points)
+    scoring.push(loss_points)
+
+    if(competitors.length < 4 || competitors.length > 8) {
+        //neki error
+        console.log("Error")
+        console.log(`Competitors length ${competitors.length}`)
+        // console.log(competitors)
+
+    } else {
+        console.log("Creating competition")
+        // console.log(competitors)
+        try {
+
+            if(req.oidc.isAuthenticated() && req.oidc.user){
+                const creator = req.oidc.user.email
+                await createCompetition(name, scoring, competitors, creator)
+
+            }
+
+        } catch(e){
+            console.log(e)
+        }
+    }
+
+
+    res.redirect('/')
+})
 
 
 app.use('/competition', competitionRouter)
