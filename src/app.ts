@@ -10,7 +10,7 @@ declare module 'express' {
 }
 
 const app = express();
-const externalUrl = process.env.RENDER_EXTERNA_URL
+const externalUrl = process.env.RENDER_EXTERNAL_URL
 const port = externalUrl && process.env.PORT ? parseInt(process.env.PORT) : 3000
 
 const baseURL = externalUrl || `http://localhost:${port}`
