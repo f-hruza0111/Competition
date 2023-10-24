@@ -61,6 +61,14 @@ app.get("/", async (req, res) => {
 app.use('/competition', competitionRouter)
 
 
-app.listen(port, () => {
-    console.log(`Listening on ${baseURL}`);
-})
+if(externalUrl){
+
+    const hostname = '0.0.0.0'
+    app.listen(port, hostname, () => {
+        console.log(`Server running locally on  http://${hostname}:${port} and externaly on ${externalUrl}`);
+    })
+} else {
+    app.listen(port, () => {
+        console.log(`Server running locally on  ${baseURL}`);
+    })
+}
