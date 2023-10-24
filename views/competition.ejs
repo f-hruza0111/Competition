@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%=competition%></title>
+</head>
+<body>
+
+    
+    <nav>
+       <% if(isAuthenticated) { %>
+            <a href="/logout">Log out</a>
+       <% } else { %>
+            <a href="/login">Log in</a>    
+       <% } %>     
+    </nav>
+    <h1><%=competition%></h1>
+    <h2>Standings</h2>
+    <table>
+        <thead>
+            <th>#</th>
+            <th>Competitor</th>
+            <th>GP</th>
+			<th>W</th>
+			<th>D</th>
+			<th>L</th>
+            <th>Points</th>
+        </thead>
+        <tbody>
+            <%let count = 1%>
+            <%for (standing of standings) { %>
+                
+                <tr>
+                    <td><%=count + '.'%></td>
+                    <td><%=standing.competitor%></td>
+                    <td><%=standing.games_played%></td>
+                    <td><%=standing.wins%></td>
+                    <td><%=standing.draws%></td>
+                    <td><%=standing.losses%></td>
+                    <td><%=standing.points%></td>
+                </tr>
+                <%count = count + 1%>
+            <%}%>    
+        </tbody>
+    </table>
+
+    <%for (let key of games.keys()) {%>
+        <h2><%=key%>. Round</h2>
+        <%for (let game of games.get(key)) {%>
+            <table>
+                <form method="post">
+                    <tr>
+                        <td><%=game.first_name%></td>
+
+                        <% if(isAuthenticated) { %>
+                            <input type="hidden" name="game_id" value=<%=game.game_id%>/>
+                        <% } %>
+
+                        <td>
+                            <%if(game.first_score === undefined && isAuthenticated) {%>
+                                <div>
+                                    <input type="number" name="first_score" min="0" required>                                
+                                </div>
+                            <%} else if(game.first_score !== undefined) {%>
+                                <p><%=game.first_score%></p>
+                            <%}%>
+                        </td>
+
+                        <td>-</td>
+
+                        <td><%if(game.second_score === undefined && isAuthenticated) {%>    
+                                <div>
+                                    <input type="number" name="second_score" min="0" required> 
+                                </div>
+                            <%} else if(game.second_score !== undefined) {%>
+                               <p><%=game.second_score%></p> 
+                            <%}%>
+                        </td>
+
+                        <td><%=game.second_name%></td>
+
+                        <% if((game.first_score === undefined || game.second_score === undefined) && isAuthenticated) {%>
+
+                            <td><button type="submit">Submit score</button></td>
+                        <%}%>
+                    </tr>     
+                </form>            
+            </table>
+        
+        <%}%>
+    <%}%>    
+</body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competition list</title>
+</head>
+<body>
+    <nav><a href="/logout">Log out</a></nav>
+
+    <h1>Competiotion tracker</h1>
+
+    <h2>Create new competition: </h2>
+    <form method="post" action="/competition"  id="form">
+        <label for="name">Competition name</label>
+        <input type="text" name="name">
+        <br></br>
+        <label for="competitors">Competitors(separated by ; or new line)</label>
+        <br></br>
+        <textarea rows="8" form="form" name="competitors"></textarea>
+        <br>
+        <label for="victoryPoints">Victory points</label>
+        <input type="number" name="victoryPoints">
+
+        <label for="drawPoints">Draw points</label>
+        <input type="number" name="drawPoints">
+
+        <label for="lossPoints">Loss points</label>
+        <input type="number" name="lossPoints">
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <% if(isAuthenticated) { %>
+        <% if(locals.competitions.length == 0) {%> 
+            <p>No competitions found</p> 
+        <%} else {%>    
+            <p>Competitions:</p>
+            <ul>
+            <% locals.competitions.forEach(competition => {%>
+                    <li><a href="/competition/<%= competition.id %>"><%=competition.name%></a></li>
+            <%})%> 
+            </ul>
+        <%} %> 
+    <% } %>
+</body>
+</html>
