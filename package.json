@@ -14,7 +14,7 @@
   "scripts": {
     "build": "rimraf dist && npx tsc",
     "prestart": "npm run build",
-    "start": "node dist\\app.js",
+    "start": "node dist/app.js",
     "preserve": "npm run build",
     "serve": " concurrently \"npx tsc -w\"  \"nodemon dist\\app.js\" "
   },
