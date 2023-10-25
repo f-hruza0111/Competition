@@ -60,11 +60,21 @@ competitionRouter.get('/:id', async (req, res) =>{
 
     const id = parseInt(req.params.id)
 
-    const competition = await getCompetition(id)
-    const standings = await getStandings(id)
-    
+    let competition
+    let standings
+    let games
+    try {
+        competition = await getCompetition(id)
+        standings = await getStandings(id)
+        games = await getAllGames(id)
+    } catch(e) {
+        console.log(e)
+        res.redirect('/')
+    }
 
-    const games = await getAllGames(id);
+
+    
+  
 
 
     // for(let key of games.keys()){
@@ -94,9 +104,16 @@ competitionRouter.post('/:id', async (req, res) =>{
 
     if(Number.isNaN(first_score) || Number.isNaN(second_score)) {
         //error
+        console.log('error')
     } else {
-        await updateGameResult(game_id, first_score, second_score)
-        console.log('Updated results')
+
+        try {
+            console.log(`Updating game results with ${first_score} and ${second_score}`)
+            await updateGameResult(game_id, first_score, second_score)
+            console.log('Updated results')
+        } catch(e) {
+            console.log(`Erro while updating game results: ${e}`)
+        }
     }
    
 

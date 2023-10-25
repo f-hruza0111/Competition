@@ -4,28 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><%=competition%></title>
+    <%- include('partials/bootstrap') %> 
+    <style>
+        table.table {width: auto;}
+        table.table-50 {width: 50%;}
+    </style>
 </head>
 <body>
 
     
-    <nav>
-       <% if(isAuthenticated) { %>
-            <a href="/logout">Log out</a>
-       <% } else { %>
-            <a href="/login">Log in</a>    
-       <% } %>     
-    </nav>
+     <%- include('partials/navbar') %> 
     <h1><%=competition%></h1>
     <h2>Standings</h2>
-    <table>
+    <table class="table table-bordered table-dark">
         <thead>
-            <th>#</th>
-            <th>Competitor</th>
-            <th>GP</th>
-			<th>W</th>
-			<th>D</th>
-			<th>L</th>
-            <th>Points</th>
+            <th scope="col">#</th>
+            <th scope="col">Competitor</th>
+            <th scope="col">GP</th>
+			<th scope="col">W</th>
+			<th scope="col">D</th>
+			<th scope="col">L</th>
+            <th scope="col">Points</th>
         </thead>
         <tbody>
             <%let count = 1%>
@@ -43,46 +42,61 @@
                 <%count = count + 1%>
             <%}%>    
         </tbody>
-    </table>
+    </table >
 
     <%for (let key of games.keys()) {%>
         <h2><%=key%>. Round</h2>
         <%for (let game of games.get(key)) {%>
-            <table>
+            <table class="table-50 table-striped">
+
+                <thead>
+                    <th class="w-25"  scope="col"></th>
+                    <th class="w-25"  scope="col"></th>
+                    <th class="w-25"  scope="col"></th>
+                    <th class="w-25" scope="col"></th>
+                    <th class="w-25"  scope="col"></th>
+                    <th class="w-25" scope="col"></th>
+           
+                </thead>
                 <form method="post">
                     <tr>
-                        <td><%=game.first_name%></td>
+                        <td  scope="row"><%=game.first_name%></td>
 
                         <% if(isAuthenticated) { %>
                             <input type="hidden" name="game_id" value=<%=game.game_id%>/>
                         <% } %>
 
-                        <td>
-                            <%if(game.first_score === undefined && isAuthenticated) {%>
+                        <td  scope="row">
+                            <%if(isAuthenticated) {%>
                                 <div>
-                                    <input type="number" name="first_score" min="0" required>                                
+                                    <input type="number" name="first_score" min="0" required
+                                     <% if(game.first_score) { %> value=<%=game.first_score%> <% } %>
+                                    >                                
                                 </div>
                             <%} else if(game.first_score !== undefined) {%>
-                                <p><%=game.first_score%></p>
+                                <%=game.first_score%>
                             <%}%>
                         </td>
 
-                        <td>-</td>
+                        <td  scope="row">-</td>
 
-                        <td><%if(game.second_score === undefined && isAuthenticated) {%>    
+                        <td  scope="row">
+                            <%if(isAuthenticated) {%>
                                 <div>
-                                    <input type="number" name="second_score" min="0" required> 
+                                    <input type="number" name="second_score" min="0" required
+                                     <% if(game.second_score) { %> value=<%=game.second_score%> <% } %>
+                                    >                                
                                 </div>
                             <%} else if(game.second_score !== undefined) {%>
-                               <p><%=game.second_score%></p> 
+                                <%=game.second_score%>
                             <%}%>
                         </td>
 
-                        <td><%=game.second_name%></td>
+                        <td  scope="row"><%=game.second_name%></td>
 
-                        <% if((game.first_score === undefined || game.second_score === undefined) && isAuthenticated) {%>
+                        <% if(isAuthenticated) {%>
 
-                            <td><button type="submit">Submit score</button></td>
+                            <td scope="row"><button type="submit">Submit score</button></td>
                         <%}%>
                     </tr>     
                 </form>            

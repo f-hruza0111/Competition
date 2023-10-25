@@ -3,6 +3,12 @@ import { getAllCompetitions, createCompetition } from './database/repository.js'
 import competitionRouter from './routes/competition.js' 
 import { auth } from 'express-openid-connect';
 
+// const filename = fileURLToPath(import.meta.url);
+
+// const __dirname = path.dirname(filename);
+
+
+
 declare module 'express' {
     interface Request {
         openId?: IDBOpenDBRequest
@@ -12,6 +18,8 @@ declare module 'express' {
 const app = express();
 const externalUrl = process.env.RENDER_EXTERNAL_URL
 const port = externalUrl && process.env.PORT ? parseInt(process.env.PORT) : 3000
+
+
 
 const baseURL = externalUrl || `http://localhost:${port}`
 
@@ -25,15 +33,15 @@ const config = {
 
 };
   
-
+// app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
 
 app.use(express.urlencoded());
 app.use(express.json());      
 app.use(auth(config))
 
+// console.log(__dirname)
 
-
-// app.set("views", path.join(__dirname, "views"))
+app.set('views', './views')
 app.set('view engine', 'ejs');
 
 app.get("/", async (req, res) => {
@@ -87,12 +95,15 @@ app.post('/', async (req, res) => {
 
             if(req.oidc.isAuthenticated() && req.oidc.user){
                 const creator = req.oidc.user.email
-                await createCompetition(name, scoring, competitors, creator)
 
+                
+                    await createCompetition(name, scoring, competitors, creator)
+
+               
             }
 
         } catch(e){
-            console.log(e)
+            console.log(`Error while creating competition: ${e}`)
         }
     }
 

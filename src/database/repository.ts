@@ -1,9 +1,8 @@
-import exp from 'constants';
+
 import pool from './connection.js'
 import Game from '../game.js'
-import { query } from 'express';
 import { roundRobin } from '../util/roundRobin.js';
-import { get } from 'http';
+
 
 
 export async function getStandings(competition_id:number) {
@@ -34,7 +33,12 @@ export async function getStandings(competition_id:number) {
 export async function getCompetition(competition_id:number){
     const query = 'SELECT competition_name FROM competition WHERE competition_id = $1'
     const results =  await pool.query(query, [competition_id])
-    return results.rows[0].competition_name
+
+
+    if(results.rows[0].competition_name) {
+        return results.rows[0].competition_name
+    } else throw new Error(`Can't find competition with this id`)
+
 }
 
 export async function getAllGames(competition_id:number) {
