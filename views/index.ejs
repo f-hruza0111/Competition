@@ -7,29 +7,45 @@
     <%- include('./partials/bootstrap') %>
 </head>
 <body>
-    <nav><a href="/logout">Log out</a></nav>
+    <%- include('partials/navbar') %> 
 
-    <h1>Competiotion tracker</h1>
+
 
     <h2>Create new competition: </h2>
     <form method="post" id="form">
-        <label for="name">Competition name</label>
-        <input type="text" name="name">
-        <br></br>
-        <label for="competitors">Competitors(separated by ; or new line)</label>
-        <br></br>
-        <textarea rows="8" form="form" name="competitors"></textarea>
-        <br>
-        <label for="victoryPoints">Victory points</label>
-        <input type="number" name="victoryPoints">
 
-        <label for="drawPoints">Draw points</label>
-        <input type="number" name="drawPoints">
+        <div class="form-group">
+            <label for="name">Competition name</label>
+            <input type="text" name="name" class="form-control">        
+        </div>
+        
+        <div class="form-group">
+            
+            <label for="competitors">Competitors(separated by ; or new line)</label>
+            <textarea rows="8" form="form" name="competitors" class="form-control"></textarea>
+        
+        </div>
 
-        <label for="lossPoints">Loss points</label>
-        <input type="number" name="lossPoints">
+        <div class="form-group">    
+            <label for="victoryPoints">Victory points</label>
+            <input type="number" name="victoryPoints" class="form-control">
+      
+        </div>
 
-        <button type="submit">Submit</button>
+        <div class="form-group">
+            
+            <label for="drawPoints">Draw points</label>
+            <input type="number" name="drawPoints" class="form-control">
+        
+        </div>
+
+        <div class="form-group">
+            <label for="lossPoints">Loss points</label>
+            <input type="number" name="lossPoints" class="form-control">
+        </div>
+        
+
+        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 
     <% if(isAuthenticated) { %>
@@ -38,9 +54,9 @@
         <%} else {%>    
             <p>Competitions:</p>
             <ul>
-            <% locals.competitions.forEach(competition => {%>
-                    <li><a href="/competition/<%= competition.id %>"><%=competition.name%></a></li>
-            <%})%> 
+                <% locals.competitions.forEach(competition => {%>
+                        <li><a href="/competition/<%= competition.id %>"><%=competition.name%></a></li>
+                <%})%> 
             </ul>
         <%} %> 
     <% } %>
